@@ -1,15 +1,10 @@
-lazy val scala211 = "2.11.12"
-lazy val scala212 = "2.12.15"
-lazy val scala213 = "2.13.6"
-lazy val supportedScalaVersions = List(scala213, scala212, scala211)
-
 import Dependencies._
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
-ThisBuild / scalaVersion     := scala213
+ThisBuild / scalaVersion     := "3.1.0"
 ThisBuild / organization     := "uk.co.danielrendall"
-ThisBuild / organizationName := "ServicesAsAService"
+ThisBuild / organizationName := "services-as-a-service"
 
 githubOwner := "danielrendall"
 githubRepository := "ServicesAsAService"
@@ -19,8 +14,9 @@ releaseCrossBuild := true
 lazy val root = (project in file("."))
   .settings(
     name := "services-as-a-service",
-    crossScalaVersions := supportedScalaVersions,
     libraryDependencies ++= Seq(
+      "uk.co.danielrendall" %% "services-as-a-service-interfaces" % "0.0.1-SNAPSHOT",
+      "org.nanohttpd" % "nanohttpd" % "2.3.1",
       specs2 % Test
     )
   )
