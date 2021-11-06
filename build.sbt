@@ -14,6 +14,7 @@ releaseCrossBuild := true
 lazy val root = (project in file("."))
   .settings(
     name := "services-as-a-service",
+    assembly / mainClass := Some("uk.co.danielrendall.saas.server.main"),
     libraryDependencies ++= Seq(
       "uk.co.danielrendall" %% "services-as-a-service-interfaces" % "0.0.1-SNAPSHOT",
       "org.nanohttpd" % "nanohttpd" % "2.3.1",

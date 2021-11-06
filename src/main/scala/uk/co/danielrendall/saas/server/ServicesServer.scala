@@ -7,6 +7,12 @@ import uk.co.danielrendall.saas.interfaces.{ResponseFactory, ServiceSession}
 
 import java.io.InputStream
 
+private val defaultPort = 1810
+
+@main def main() =
+  val port = Option(System.getProperty("port")).map(_.toInt).getOrElse(defaultPort)
+  new ServicesServer(port).start(NanoHTTPD.SOCKET_READ_TIMEOUT, false)
+
 class ServicesServer(port: Int)
   extends NanoHTTPD(port):
 
@@ -56,12 +62,3 @@ class ServicesServer(port: Int)
 
   private def badRequest(msg: String): Response =
     newFixedLengthResponse(Status.BAD_REQUEST, MIME_PLAINTEXT, msg)
-
-object ServicesServer:
-
-  private val defaultPort = 1810
-
-  def main(args: Array[String]): Unit = {
-    val port = Option(System.getProperty("port")).map(_.toInt).getOrElse(defaultPort)
-    new ServicesServer(port).start(NanoHTTPD.SOCKET_READ_TIMEOUT, false)
-  }

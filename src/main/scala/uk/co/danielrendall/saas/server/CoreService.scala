@@ -3,11 +3,13 @@ package uk.co.danielrendall.saas.server
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoHTTPD.Response.Status
 import fi.iki.elonen.NanoHTTPD.{MIME_PLAINTEXT, Response, newFixedLengthResponse}
-import uk.co.danielrendall.saas.interfaces.{ResponseFactory, ServiceMetadata, ServiceSession, Serviceable}
+import uk.co.danielrendall.saas.interfaces.*
 
 import scala.collection.mutable
 
-class CoreService extends Serviceable:
+class CoreService
+  extends Serviceable
+  with ResponseHelpers:
 
   private val nameToService: mutable.Map[String, Serviceable] =
     new mutable.HashMap[String, Serviceable]()
@@ -75,7 +77,7 @@ class CoreService extends Serviceable:
                 case None =>
                   // TODO - consider adding support for a constructor that takes query parameters...?
                   if (addNewService(head, session)) {
-                    okMsg(s"Added '$head'")
+                    ok(s"Added '$head'")
                   } else {
                     newFixedLengthResponse(Status.INTERNAL_ERROR, MIME_PLAINTEXT, s"Couldn't add service at '$head'")
                   }
@@ -113,7 +115,7 @@ class CoreService extends Serviceable:
             if (isValidMountPoint(head)) {
               nameToService.remove(head) match {
                 case Some(_) =>
-                  okMsg(s"Removed service at '$head'")
+                  ok(s"Removed service at '$head'")
                 case None =>
                   notFound(s"No service found at '$head'")
               }
@@ -158,18 +160,3 @@ class CoreService extends Serviceable:
   private def badMountPointResponse(mount: String)
                                    (implicit responseFactory: ResponseFactory): Response =
     badRequest(s"Mount point '$mount' is invalid - must be lower-case letters and digits only")
-
-
-
-  // TODO - move these into interface
-  private def okMsg(msg: String)
-                   (implicit responseFactory: ResponseFactory): Response =
-    responseFactory.newFixedLengthResponse(Status.OK, MIME_PLAINTEXT, msg)
-
-  private def notFound(msg: String)
-                   (implicit responseFactory: ResponseFactory): Response =
-    responseFactory.newFixedLengthResponse(Status.NOT_FOUND, MIME_PLAINTEXT, msg)
-
-  private def badRequest(msg: String)
-                        (implicit responseFactory: ResponseFactory): Response =
-    responseFactory.newFixedLengthResponse(Status.BAD_REQUEST, MIME_PLAINTEXT, msg)
