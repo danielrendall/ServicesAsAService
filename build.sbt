@@ -15,7 +15,7 @@ lazy val root = (project in file("."))
     name := "services-as-a-service",
     assembly / mainClass := Some("uk.co.danielrendall.saas.server.main"),
     libraryDependencies ++= Seq(
-      "uk.co.danielrendall" %% "services-as-a-service-interfaces" % "0.0.1-SNAPSHOT",
+      "uk.co.danielrendall" %% "services-as-a-service-interfaces" % "0.0.1",
       "org.nanohttpd" % "nanohttpd" % "2.3.1",
       specs2 % Test
     )
